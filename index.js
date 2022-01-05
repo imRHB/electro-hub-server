@@ -23,7 +23,90 @@ async function run() {
         const database = client.db('electro-hub');
 
         // ElectroHub DB collection
+        const productCollection = database.collection('products');
+        const reviewCollection = database.collection('reviews');
+        const orderCollection = database.collection('orders');
 
+
+        // Backend Server API
+
+        // GET API : Products
+        app.get('/products', async (req, res) => {
+            const products = await productCollection.find({}).toArray();
+            res.json(products);
+        });
+
+        // GET API : Single product
+        app.get('/products/:productId', async (req, res) => {
+            const productId = req.params.productId;
+            const query = { _id: ObjectId(productId) };
+            const product = await productCollection.findOne(query);
+            res.json(product);
+        });
+
+        // GET API : Reviews
+        app.get('/reviews', async (req, res) => {
+            const reviews = await reviewCollection.find({}).toArray();
+            res.json(reviews);
+        });
+
+        // GET API : Orders
+        app.get('/orders', async (req, res) => {
+            const orders = await orderCollection.find({}).toArray();
+            res.json(orders);
+        });
+
+        // GET API : Order filter by email
+        app.get('/orders/:email', async (req, res) => {
+            const email = req.params.email;
+            const query = { email: email };
+            const orders = orderCollection.find(query);
+            const result = await orders.toArray();
+            res.json(result);
+        });
+
+        // POST API : Add product
+        app.post('/add-product', async (req, res) => {
+            const newProduct = req.body;
+            const result = productCollection.insertOne(newProduct);
+            res.json(result);
+        });
+
+        // POST API : Add review
+        app.post('/add-review', async (req, res) => {
+            const newReview = req.body;
+            const result = reviewCollection.insertOne(newReview);
+            res.json(result);
+        });
+
+        // PUT API : Order status
+        app.put('/orders/:productId', async (req, res) => {
+            const productId = req.params.productId;
+            const filter = { _id: ObjectId(productCollection) };
+            const updateStatus = {
+                $set: {
+                    status: 'Delivered'
+                }
+            };
+            const result = await orderCollection.updateOne(filter, updateStatus);
+            res.json(result);
+        });
+
+        // DELETE API : Product
+        app.delete('/products/:productId', async (req, res) => {
+            const productId = req.params.productId;
+            const query = { _id: ObjectId(productId) };
+            const result = await productCollection.deleteOne(query);
+            res.json(result);
+        });
+
+        // DELETE API : Order
+        app.delete('/orders/:productId', async (req, res) => {
+            const productId = req.params.productId;
+            const query = { _id: productId };
+            const result = await orderCollection.deleteOne(query);
+            res.json(result);
+        });
     }
 
     finally {
