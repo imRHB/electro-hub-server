@@ -37,7 +37,7 @@ async function run() {
         });
 
         // GET API : Single product
-        app.get('/products/:productId', async (req, res) => {
+        app.get('/product/:productId', async (req, res) => {
             const productId = req.params.productId;
             const query = { _id: ObjectId(productId) };
             const product = await productCollection.findOne(query);
@@ -100,7 +100,7 @@ async function run() {
         });
 
         // DELETE API : Product
-        app.delete('/products/:productId', async (req, res) => {
+        app.delete('/product/:productId', async (req, res) => {
             const productId = req.params.productId;
             const query = { _id: ObjectId(productId) };
             const result = await productCollection.deleteOne(query);
