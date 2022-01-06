@@ -89,20 +89,22 @@ async function run() {
         // PUT API : Order status
         app.put('/orders/:productId', async (req, res) => {
             const productId = req.params.productId;
-            const filter = { _id: ObjectId(productCollection) };
+            const filter = { _id: ObjectId(productId) };
+            const options = { upsert: true };
             const updateStatus = {
                 $set: {
-                    status: 'Delivered'
+                    status: req.body.status
                 }
             };
-            const result = await orderCollection.updateOne(filter, updateStatus);
+            const result = await orderCollection.updateOne(filter, updateStatus, options);
             res.json(result);
+            console.log(req.body.status);
         });
 
         // DELETE API : Product
         app.delete('/product/:productId', async (req, res) => {
             const productId = req.params.productId;
-            const query = { _id: ObjectId(productId) };
+            const query = { _id: productId };
             const result = await productCollection.deleteOne(query);
             res.json(result);
         });
