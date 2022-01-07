@@ -108,13 +108,12 @@ async function run() {
             res.json(result);
         });
 
-        /* app.post('/review', async (req, res) => {
+        app.post('/review', async (req, res) => {
             const review = req.body;
             console.log(review);
             const result = await reviewCollection.insertOne(review);
-            console.log('added ', result);
             res.json(result);
-        }) */
+        })
 
         app.put('/users', async (req, res) => {
             const user = req.body;
