@@ -161,7 +161,7 @@ async function run() {
         // DELETE API : Product
         app.delete('/product/:productId', async (req, res) => {
             const productId = req.params.productId;
-            const query = { _id: productId };
+            const query = { _id: ObjectId(productId) };
             const result = await productCollection.deleteOne(query);
             res.json(result);
         });
